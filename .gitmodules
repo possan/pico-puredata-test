@@ -1,9 +1,6 @@
 [submodule "ext/pd/libpd"]
 	path = ext/pd/libpd
 	url = git@github.com:possan/libpd.git
-[submodule "ext/pd/libpd2"]
-	path = ext/pd/libpd2
-	url = git@github.com:possan/libpd.git
 [submodule "ext/freertos-tcp/FreeRTOS-Plus-TCP"]
 	path = ext/freertos-tcp/FreeRTOS-Plus-TCP
 	url = ssh://git@github.com/FreeRTOS/FreeRTOS-Plus-TCP.git
