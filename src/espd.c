@@ -759,6 +759,7 @@ double sys_getrealtime(void)
 t_class *glob_pdobject;
 
 #define t_floatarg float
+#ifndef DEBUGMEM
 void glob_foo(void *dummy, t_floatarg f)
 {
     // if (f == 0)
@@ -766,9 +767,9 @@ void glob_foo(void *dummy, t_floatarg f)
     // else if (f == 1)
     //     espd_printtimediff();
 }
+#endif
 
-
-void glob_foo(void *dummy, t_floatarg f);
+// void glob_foo(void *dummy, t_floatarg f);
 
 static void glob_beginnew(void *dummy, t_symbol *pname, t_symbol *pdir)
 {
