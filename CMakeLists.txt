@@ -55,7 +55,7 @@ add_executable(pdtest2)
 # endfunction()
 
 # pico_add_extra_outputs(...)
-set (PDSRC 
+set (PDSRC
 
     # PD Code
     ${LIBPD_ROOT}/pure-data/src/d_arithmetic.c
@@ -112,8 +112,8 @@ set (PDSRC
     ${LIBPD_ROOT}/pure-data/src/m_pd.c
 ##    ${LIBPD_ROOT}/pure-data/src/m_sched.c
 
-##    ${LIBPD_ROOT}/pure-data/src/s_audio_dummy.c
-##    ${LIBPD_ROOT}/pure-data/src/s_audio.c
+    ${LIBPD_ROOT}/pure-data/src/s_audio.c
+    ${LIBPD_ROOT}/pure-data/src/s_audio_dummy.c
     ${LIBPD_ROOT}/pure-data/src/s_inter_gui.c
 ##    ${LIBPD_ROOT}/pure-data/src/s_inter.c
 ##    ${LIBPD_ROOT}/pure-data/src/s_loader.c

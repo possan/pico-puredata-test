@@ -37,8 +37,6 @@
 
 #include "g_canvas.h"
 
-#include "espd.h"
-
 // sed 's/;$/;\\/' foo.pd | sed 's/#N //'
 static const char patchfile[] =
   "canvas 0 50 450 300 12;\n\

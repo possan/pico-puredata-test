@@ -28,10 +28,10 @@
 // mostly from ESPD
 
 /* ------- STUBS that do nothing ------------- */
-int sys_get_outchannels(void) {return(IOCHANS); }
-int sys_get_inchannels(void) {return(IOCHANS); }
-float sys_getsr( void) {return (48000);}
-int sys_getblksize(void) { return (DEFDACBLKSIZE); }
+
+int sys_getblksize(void) { return DEFDACBLKSIZE; }
+
+void sys_log_error(int type) {};
 
 int pd_compatibilitylevel = 100;
 int sys_verbose = 0;
@@ -42,10 +42,8 @@ int sys_nmidiout = 0;
 int sys_hipriority = 0;
 int sys_debuglevel = 0;
 int sys_externalschedlib = 0;
-int sys_audioapiopened = 0; 
+int sys_audioapiopened = 0;
 
-int audio_shouldkeepopen(void) { return (0);}
-int audio_isopen( void) { return (1); }
 void sys_reopen_audio ( void) { }
 void sys_close_audio ( void) { }
 
@@ -300,17 +298,7 @@ void sched_tick(void)
     sched_diddsp++;
 }
 
-void sched_set_using_audio(int flag)
-{
-    // sched_useaudio = flag;
-    // if (flag == SCHED_AUDIO_NONE)
-    // {
-    //     sched_referencerealtime = sys_getrealtime();
-    //     sched_referencelogicaltime = clock_getlogicaltime();
-    // }
-
-    // pdgui_vmess("pdtk_pd_audio", "r", flag ? "on" : "off");
-}
+void sched_set_using_audio(int flag) {}
 
 static int audio_isfixedsr(int api)
 {
@@ -321,93 +309,10 @@ static int audio_isfixedsr(int api)
     return 0;
 }
 
-int sys_startgui(const char *libdir)
-{
-    // t_canvas *x;
-    // stderr_isatty = isatty(2);
-    // for (x = pd_getcanvaslist(); x; x = x->gl_next)
-    //     canvas_vis(x, 0);
-    // INTER->i_havegui = 0;
-    // INTER->i_havetkproc = 1;
-    // INTER->i_guihead = INTER->i_guitail = 0;
-    // INTER->i_waitingforping = 0;
-    // if (sys_do_startgui(libdir))
-    //     return (-1);
-    return (0);
-}
-
-    /* Shut the GUI down. */
-void sys_stopgui(void)
-{
-    // t_canvas *x;
-    // for (x = pd_getcanvaslist(); x; x = x->gl_next)
-    //     canvas_vis(x, 0);
-
-    // if (INTER->i_guisock >= 0)
-    // {
-    //     sys_closesocket(INTER->i_guisock);
-    //     sys_rmpollfn(INTER->i_guisock);
-    //     INTER->i_guisock = -1;
-    // }
-    // INTER->i_havegui = 0;
-    // INTER->i_havetkproc = 0;
-}
+int sys_startgui(const char *libdir) { return 0; };
+void sys_stopgui(void) {};
 
 
-    /* inform rest of Pd of current channels and sample rate.  Do this when
-    opening audio device.  This is also called from alsamm but I think that
-    is no longer in use, so in principle this could be static. */
-
-void sys_setchsr(int chin, int chout, int sr)
-{
-    int oldchin = STUFF->st_inchannels;
-    int oldchout = STUFF->st_outchannels;
-    int oldinbytes = (oldchin ? oldchin : 2) *
-        (DEFDACBLKSIZE*sizeof(t_sample));
-    int oldoutbytes = (oldchout ? oldchout : 2) *
-        (DEFDACBLKSIZE*sizeof(t_sample));
-    int inbytes = (chin ? chin : 2) *
-        (DEFDACBLKSIZE*sizeof(t_sample));
-    int outbytes = (chout ? chout : 2) *
-        (DEFDACBLKSIZE*sizeof(t_sample));
-    int changed = 0;
-
-        /* NB: reallocating the input/output channel arrays requires a DSP
-        graph update, so we only do it if the channel count has changed! */
-    if (!STUFF->st_soundin || chin != oldchin)
-    {
-        if (STUFF->st_soundin)
-            freebytes(STUFF->st_soundin, oldinbytes);
-        STUFF->st_soundin = (t_sample *)getbytes(inbytes);
-        STUFF->st_inchannels = chin;
-        changed = 1;
-    }
-    memset(STUFF->st_soundin, 0, inbytes);
-
-    if (!STUFF->st_soundout || chout != oldchout)
-    {
-        if (STUFF->st_soundout)
-            freebytes(STUFF->st_soundout, oldoutbytes);
-        STUFF->st_soundout = (t_sample *)getbytes(outbytes);
-        STUFF->st_outchannels = chout;
-        changed = 1;
-    }
-    memset(STUFF->st_soundout, 0, outbytes);
-
-    if (!audio_isfixedsr(sys_audioapiopened))
-    {
-        if (STUFF->st_dacsr != sr)
-            changed = 1;
-        STUFF->st_dacsr = sr;
-    }
-
-    logpost(NULL, PD_VERBOSE, "input channels = %d, output channels = %d",
-            STUFF->st_inchannels, STUFF->st_outchannels);
-
-        /* prevent redundant DSP updates, particularly when toggling DSP */
-    if (changed)
-        canvas_update_dsp();
-}
 
 
 /* ------------------- s_file.c ------------------------ */
@@ -983,7 +888,6 @@ void d_ugen_setup(void);
 
 void conf_init(void)
 {
-    // trymem(10);
     g_array_setup();
     g_canvas_setup();
     g_text_setup();
@@ -1019,13 +923,4 @@ void conf_init(void)
     d_math_setup();
     d_misc_setup();
     expr_setup();
-    // trymem(11);
 }
-
-// ---------------------------------
-
-
-/*
-sed command to prepare patch:
-    sed 's/;$/;\\/' foo.pd | sed 's/#N //'
-*/
