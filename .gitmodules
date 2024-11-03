@@ -11,3 +11,5 @@
 [submodule "ext/freertos/FreeRTOS-Kernel"]
 	path = ext/freertos/FreeRTOS-Kernel
 	url = ssh://git@github.com/FreeRTOS/FreeRTOS-Kernel.git
+[submodule "libpd"]
+	url = https://github.com/possan/libpd.git
