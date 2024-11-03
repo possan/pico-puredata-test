@@ -13,3 +13,6 @@
 	url = ssh://git@github.com/FreeRTOS/FreeRTOS-Kernel.git
 [submodule "libpd"]
 	url = https://github.com/possan/libpd.git
+[submodule "ext/pure-data"]
+	path = ext/pure-data
+	url = git@github.com:possan/pure-data.git

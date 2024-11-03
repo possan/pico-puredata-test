@@ -28,7 +28,8 @@ endif(PICO)
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} -ffast-math -funroll-loops -fomit-frame-pointer -O3 ")
 set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS} -g -O0")
 
-set (LIBPD_ROOT ${CMAKE_CURRENT_LIST_DIR}/ext/pd/libpd)
+# set (LIBPD_ROOT ${CMAKE_CURRENT_LIST_DIR}/ext/pd/libpd)
+set (PD_ROOT ${CMAKE_CURRENT_LIST_DIR}/ext/pure-data)
 set (LWIP_PATH $ENV{PICO_SDK_PATH}/lib/lwip/)
 
 if (PICO)
@@ -56,109 +57,109 @@ add_executable(pdtest2)
 set (PDSRC 
 
     # PD Code
-    ${LIBPD_ROOT}/pure-data/src/d_arithmetic.c
-    ${LIBPD_ROOT}/pure-data/src/d_array.c
-    ${LIBPD_ROOT}/pure-data/src/d_ctl.c
-    ${LIBPD_ROOT}/pure-data/src/d_dac.c
-    ${LIBPD_ROOT}/pure-data/src/d_delay.c
-    ${LIBPD_ROOT}/pure-data/src/d_fft.c
-    ${LIBPD_ROOT}/pure-data/src/d_fft_fftsg.c
-    ${LIBPD_ROOT}/pure-data/src/d_filter.c
-    ${LIBPD_ROOT}/pure-data/src/d_global.c
-    ${LIBPD_ROOT}/pure-data/src/d_math.c
-    ${LIBPD_ROOT}/pure-data/src/d_misc.c
-    ${LIBPD_ROOT}/pure-data/src/d_osc.c
-    ${LIBPD_ROOT}/pure-data/src/d_resample.c
-    ${LIBPD_ROOT}/pure-data/src/d_soundfile_aiff.c
-    ${LIBPD_ROOT}/pure-data/src/d_soundfile_caf.c
-    ${LIBPD_ROOT}/pure-data/src/d_soundfile_next.c
-    ${LIBPD_ROOT}/pure-data/src/d_soundfile_wave.c
-    ${LIBPD_ROOT}/pure-data/src/d_soundfile.c
-    ${LIBPD_ROOT}/pure-data/src/d_ugen.c
+    ${PD_ROOT}/src/d_arithmetic.c
+    ${PD_ROOT}/src/d_array.c
+    ${PD_ROOT}/src/d_ctl.c
+    ${PD_ROOT}/src/d_dac.c
+    ${PD_ROOT}/src/d_delay.c
+    ${PD_ROOT}/src/d_fft.c
+    ${PD_ROOT}/src/d_fft_fftsg.c
+    ${PD_ROOT}/src/d_filter.c
+    ${PD_ROOT}/src/d_global.c
+    ${PD_ROOT}/src/d_math.c
+    ${PD_ROOT}/src/d_misc.c
+    ${PD_ROOT}/src/d_osc.c
+    ${PD_ROOT}/src/d_resample.c
+    ${PD_ROOT}/src/d_soundfile_aiff.c
+    ${PD_ROOT}/src/d_soundfile_caf.c
+    ${PD_ROOT}/src/d_soundfile_next.c
+    ${PD_ROOT}/src/d_soundfile_wave.c
+    ${PD_ROOT}/src/d_soundfile.c
+    ${PD_ROOT}/src/d_ugen.c
 
-##    ${LIBPD_ROOT}/pure-data/src/g_all_guis.c
-    ${LIBPD_ROOT}/pure-data/src/g_array.c
-##    ${LIBPD_ROOT}/pure-data/src/g_bang.c
-    ${LIBPD_ROOT}/pure-data/src/g_canvas.c
-    ${LIBPD_ROOT}/pure-data/src/g_clone.c
-##    ${LIBPD_ROOT}/pure-data/src/g_editor_extras.c
-##    ${LIBPD_ROOT}/pure-data/src/g_editor.c
-    ${LIBPD_ROOT}/pure-data/src/g_graph.c
-    ${LIBPD_ROOT}/pure-data/src/g_guiconnect.c
-    ${LIBPD_ROOT}/pure-data/src/g_io.c
-    # ${LIBPD_ROOT}/pure-data/src/g_mycanvas.c
-##    ${LIBPD_ROOT}/pure-data/src/g_numbox.c
-##    ${LIBPD_ROOT}/pure-data/src/g_radio.c
-    ${LIBPD_ROOT}/pure-data/src/g_readwrite.c
-    ${LIBPD_ROOT}/pure-data/src/g_rtext.c
-    ${LIBPD_ROOT}/pure-data/src/g_scalar.c
-##        ${LIBPD_ROOT}/pure-data/src/g_slider.c
-    ${LIBPD_ROOT}/pure-data/src/g_template.c
-    ${LIBPD_ROOT}/pure-data/src/g_text.c
-##        ${LIBPD_ROOT}/pure-data/src/g_toggle.c
-##        ${LIBPD_ROOT}/pure-data/src/g_traversal.c
-##    ${LIBPD_ROOT}/pure-data/src/g_undo.c
-##        ${LIBPD_ROOT}/pure-data/src/g_vumeter.c
+##    ${PD_ROOT}/src/g_all_guis.c
+    ${PD_ROOT}/src/g_array.c
+##    ${PD_ROOT}/src/g_bang.c
+    ${PD_ROOT}/src/g_canvas.c
+    ${PD_ROOT}/src/g_clone.c
+##    ${PD_ROOT}/src/g_editor_extras.c
+##    ${PD_ROOT}/src/g_editor.c
+    ${PD_ROOT}/src/g_graph.c
+    ${PD_ROOT}/src/g_guiconnect.c
+    ${PD_ROOT}/src/g_io.c
+    # ${PD_ROOT}/src/g_mycanvas.c
+##    ${PD_ROOT}/src/g_numbox.c
+##    ${PD_ROOT}/src/g_radio.c
+    ${PD_ROOT}/src/g_readwrite.c
+    ${PD_ROOT}/src/g_rtext.c
+    ${PD_ROOT}/src/g_scalar.c
+##        ${PD_ROOT}/src/g_slider.c
+    ${PD_ROOT}/src/g_template.c
+    ${PD_ROOT}/src/g_text.c
+##        ${PD_ROOT}/src/g_toggle.c
+##        ${PD_ROOT}/src/g_traversal.c
+##    ${PD_ROOT}/src/g_undo.c
+##        ${PD_ROOT}/src/g_vumeter.c
 
-    ${LIBPD_ROOT}/pure-data/src/m_atom.c
-    ${LIBPD_ROOT}/pure-data/src/m_binbuf.c
-    ${LIBPD_ROOT}/pure-data/src/m_class.c
-##    ${LIBPD_ROOT}/pure-data/src/m_conf.c
-##    ${LIBPD_ROOT}/pure-data/src/m_glob.c
-    ${LIBPD_ROOT}/pure-data/src/m_memory.c
-    ${LIBPD_ROOT}/pure-data/src/m_obj.c
-    ${LIBPD_ROOT}/pure-data/src/m_pd.c
-##    ${LIBPD_ROOT}/pure-data/src/m_sched.c
+    ${PD_ROOT}/src/m_atom.c
+    ${PD_ROOT}/src/m_binbuf.c
+    ${PD_ROOT}/src/m_class.c
+##    ${PD_ROOT}/src/m_conf.c
+##    ${PD_ROOT}/src/m_glob.c
+    ${PD_ROOT}/src/m_memory.c
+    ${PD_ROOT}/src/m_obj.c
+    ${PD_ROOT}/src/m_pd.c
+##    ${PD_ROOT}/src/m_sched.c
 
-##    ${LIBPD_ROOT}/pure-data/src/s_audio_dummy.c
-##    ${LIBPD_ROOT}/pure-data/src/s_audio.c
-    ${LIBPD_ROOT}/pure-data/src/s_inter_gui.c
-##    ${LIBPD_ROOT}/pure-data/src/s_inter.c
-##    ${LIBPD_ROOT}/pure-data/src/s_loader.c
-##    ${LIBPD_ROOT}/pure-data/src/s_main.c
-##    ${LIBPD_ROOT}/pure-data/src/s_net.c
-##    ${LIBPD_ROOT}/pure-data/src/s_path.c
-    ${LIBPD_ROOT}/pure-data/src/s_print.c
-    ${LIBPD_ROOT}/pure-data/src/s_utf8.c
+##    ${PD_ROOT}/src/s_audio_dummy.c
+##    ${PD_ROOT}/src/s_audio.c
+    ${PD_ROOT}/src/s_inter_gui.c
+##    ${PD_ROOT}/src/s_inter.c
+##    ${PD_ROOT}/src/s_loader.c
+##    ${PD_ROOT}/src/s_main.c
+##    ${PD_ROOT}/src/s_net.c
+##    ${PD_ROOT}/src/s_path.c
+    ${PD_ROOT}/src/s_print.c
+    ${PD_ROOT}/src/s_utf8.c
 
-    ${LIBPD_ROOT}/pure-data/src/x_acoustics.c
-    ${LIBPD_ROOT}/pure-data/src/x_arithmetic.c
-    ${LIBPD_ROOT}/pure-data/src/x_array.c
-    ${LIBPD_ROOT}/pure-data/src/x_connective.c
-##    ${LIBPD_ROOT}/pure-data/src/x_file.c
-    ${LIBPD_ROOT}/pure-data/src/x_gui.c
-    ${LIBPD_ROOT}/pure-data/src/x_interface.c
-    ${LIBPD_ROOT}/pure-data/src/x_list.c
-##    ${LIBPD_ROOT}/pure-data/src/x_midi.c
-    ${LIBPD_ROOT}/pure-data/src/x_misc.c
-    # ${LIBPD_ROOT}/pure-data/src/x_net.c
-    ${LIBPD_ROOT}/pure-data/src/x_scalar.c
-    ${LIBPD_ROOT}/pure-data/src/x_text.c
-    ${LIBPD_ROOT}/pure-data/src/x_time.c
-    ${LIBPD_ROOT}/pure-data/src/x_vexp_fun.c
-    ${LIBPD_ROOT}/pure-data/src/x_vexp_if.c
-    ${LIBPD_ROOT}/pure-data/src/x_vexp.c
+    ${PD_ROOT}/src/x_acoustics.c
+    ${PD_ROOT}/src/x_arithmetic.c
+    ${PD_ROOT}/src/x_array.c
+    ${PD_ROOT}/src/x_connective.c
+##    ${PD_ROOT}/src/x_file.c
+    ${PD_ROOT}/src/x_gui.c
+    ${PD_ROOT}/src/x_interface.c
+    ${PD_ROOT}/src/x_list.c
+##    ${PD_ROOT}/src/x_midi.c
+    ${PD_ROOT}/src/x_misc.c
+    # ${PD_ROOT}/src/x_net.c
+    ${PD_ROOT}/src/x_scalar.c
+    ${PD_ROOT}/src/x_text.c
+    ${PD_ROOT}/src/x_time.c
+    ${PD_ROOT}/src/x_vexp_fun.c
+    ${PD_ROOT}/src/x_vexp_if.c
+    ${PD_ROOT}/src/x_vexp.c
 
     # # Some extras
-    # ${LIBPD_ROOT}/pure-data/extra/bob~/bob~.c
-    # ${LIBPD_ROOT}/pure-data/extra/bonk~/bonk~.c
-    # ${LIBPD_ROOT}/pure-data/extra/choice/choice.c
-    # ${LIBPD_ROOT}/pure-data/extra/fiddle~/fiddle~.c
-    # ${LIBPD_ROOT}/pure-data/extra/loop~/loop~.c
-    # ${LIBPD_ROOT}/pure-data/extra/lrshift~/lrshift~.c
-    # # ${LIBPD_ROOT}/pure-data/extra/pd~/pd~.c
-    # # ${LIBPD_ROOT}/pure-data/extra/pd~/pdsched~.c
-    # ${LIBPD_ROOT}/pure-data/extra/pique/pique.c
-    # ${LIBPD_ROOT}/pure-data/extra/sigmund~/sigmund~.c
-    # ${LIBPD_ROOT}/pure-data/extra/stdout/stdout.c
+    # ${PD_ROOT}/extra/bob~/bob~.c
+    # ${PD_ROOT}/extra/bonk~/bonk~.c
+    # ${PD_ROOT}/extra/choice/choice.c
+    # ${PD_ROOT}/extra/fiddle~/fiddle~.c
+    # ${PD_ROOT}/extra/loop~/loop~.c
+    # ${PD_ROOT}/extra/lrshift~/lrshift~.c
+    # # ${PD_ROOT}/extra/pd~/pd~.c
+    # # ${PD_ROOT}/extra/pd~/pdsched~.c
+    # ${PD_ROOT}/extra/pique/pique.c
+    # ${PD_ROOT}/extra/sigmund~/sigmund~.c
+    # ${PD_ROOT}/extra/stdout/stdout.c
 
     # # LibPD Wrapper
-    ${LIBPD_ROOT}/libpd_wrapper/z_hooks.c
+    # ${LIBPD_ROOT}/libpd_wrapper/z_hooks.c
     # ${LIBPD_ROOT}/libpd_wrapper/z_libpd.c
     # ${LIBPD_ROOT}/libpd_wrapper/x_libpdreceive.c
     # ${LIBPD_ROOT}/libpd_wrapper/util/z_print_util.c
     
-    ${LIBPD_ROOT}/libpd_wrapper/s_libpdmidi.c
+    # ${LIBPD_ROOT}/libpd_wrapper/s_libpdmidi.c
     # ${LIBPD_ROOT}/libpd_wrapper/util/z_queued.c
     # ${LIBPD_ROOT}/libpd_wrapper/util/z_ringbuffer.c
 
@@ -224,9 +225,12 @@ include_directories(pdtest2
     ${LWIP_PATH}/src/include/compat/posix
     ${LWIP_PATH}/contrib/ports/unix/port/include
 
-    ${LIBPD_ROOT}/pure-data/src
-    ${LIBPD_ROOT}/libpd_wrapper
-    ${LIBPD_ROOT}/libpd_wrapper/util
+    ${PD_ROOT}/src
+
+    ${LIBPD_ROOT}/src
+    
+    # ${LIBPD_ROOT}/libpd_wrapper
+    # ${LIBPD_ROOT}/libpd_wrapper/util
 )
 
 if (PICO)
