@@ -769,7 +769,7 @@ void glob_foo(void *dummy, t_floatarg f)
 }
 #endif
 
-// void glob_foo(void *dummy, t_floatarg f);
+extern void glob_foo(void *dummy, t_floatarg f);
 
 static void glob_beginnew(void *dummy, t_symbol *pname, t_symbol *pdir)
 {
