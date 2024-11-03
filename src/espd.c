@@ -44,6 +44,8 @@ int sys_debuglevel = 0;
 int sys_externalschedlib = 0;
 int sys_audioapiopened = 0;
 
+const char *pd_extraflags = 0;
+
 void sys_reopen_audio ( void) { }
 void sys_close_audio ( void) { }
 
@@ -777,6 +779,9 @@ double sys_getrealtime(void)
 
 
 /* ----------------- stuff to keep Pd happy -------------------- */
+
+
+const char **sys_get_dllextensions(void) { return 0; }
 
 t_class *glob_pdobject;
 
