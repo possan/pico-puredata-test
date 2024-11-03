@@ -1,5 +1,7 @@
 # Running PureData on Raspberry Pi Pico
 
+⚠️ 🐉 here be dragons 🐉 ⚠️
+
 This is a very hacky attempt at running pd on a pico, i first tried to port regular libpd but never got it fully to work, then i switched to something based of Millers ESP32 hack and that seems to start without crashing at least.
 
 After spending several days debugging on chip why the pico hardfaulted in code that shouldn't be able to crash, it boiled down to an alignment issue of an enum (i think)
