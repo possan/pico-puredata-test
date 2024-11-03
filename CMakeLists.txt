@@ -22,8 +22,10 @@ endif(PICO)
 # https://embedded.fm/blog/2017/3/6/exceptional-code
 if(PICO)
     set(CMAKE_C_FLAGS         "${CMAKE_C_FLAGS} -Wno-int-to-pointer-cast -Wno-unused-but-set-variable -Wno-unused-function -Wno-format -Wno-stringop-truncation -Wno-unused-const-variable -Wno-pointer-to-int-cast -Werror-implicit-function-declaration -fno-delete-null-pointer-checks -Wcast-align -falign-functions=4 -falign-jumps=4 -falign-labels=4 -falign-loops=4")
+    set(PICOFLAG 1)
 else(PICO)
     set(CMAKE_C_FLAGS         "${CMAKE_C_FLAGS} -Wno-int-to-pointer-cast -Wno-unused-but-set-variable -Wno-unused-function -Wno-format -Wno-unused-const-variable -Wno-pointer-to-int-cast -Werror-implicit-function-declaration -fno-delete-null-pointer-checks -Wcast-align")
+    set(PICOFLAG 0)
 endif(PICO)
 set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS} -ffast-math -funroll-loops -fomit-frame-pointer -O3 ")
 set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS} -g -O0")
@@ -154,13 +156,12 @@ set (PDSRC
 
     # # LibPD Wrapper
     ${LIBPD_ROOT}/libpd_wrapper/z_hooks.c
-    # ${LIBPD_ROOT}/libpd_wrapper/z_libpd.c
-    # ${LIBPD_ROOT}/libpd_wrapper/x_libpdreceive.c
-    # ${LIBPD_ROOT}/libpd_wrapper/util/z_print_util.c
-    
+    ${LIBPD_ROOT}/libpd_wrapper/z_libpd.c
+    ${LIBPD_ROOT}/libpd_wrapper/x_libpdreceive.c
+    ${LIBPD_ROOT}/libpd_wrapper/util/z_print_util.c
     ${LIBPD_ROOT}/libpd_wrapper/s_libpdmidi.c
-    # ${LIBPD_ROOT}/libpd_wrapper/util/z_queued.c
-    # ${LIBPD_ROOT}/libpd_wrapper/util/z_ringbuffer.c
+    ${LIBPD_ROOT}/libpd_wrapper/util/z_queued.c
+    ${LIBPD_ROOT}/libpd_wrapper/util/z_ringbuffer.c
 
 )
 
@@ -173,7 +174,7 @@ if(PICO)
     )
 else(PICO)
     target_sources(pdtest2 PRIVATE
-        src/main-local.c
+        src/main.c
         src/espd.c
         ${PDSRC}
     )
@@ -201,10 +202,10 @@ target_compile_options(pdtest2 PRIVATE
     "-DUSEAPI_DUMMY"
     # "-DLOUD"
     "-DDEBUGMEM"
-    "-DLIBPD_EXTRA"
+    # "-DLIBPD_EXTRA"
 
     # My hacky stuff
-    "-DPICO"
+    "-DPICO=${PICOFLAG}"
     "-DNONET"
 
     "-DPDTHREADS=0"

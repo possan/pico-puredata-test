@@ -4,7 +4,7 @@
 #include "g_canvas.h"
 #include "g_undo.h"
 
-#ifdef PICO
+#if PICO
 #include "pico/stdlib.h"
 #include "pico/multicore.h"
 #include <pico/bootrom.h>
@@ -36,6 +36,13 @@ int sys_getblksize(void) { return (DEFDACBLKSIZE); }
 int pd_compatibilitylevel = 100;
 int sys_verbose = 0;
 int sys_noloadbang = 0;
+
+int sys_nmidiin = 0;
+int sys_nmidiout = 0;
+int sys_hipriority = 0;
+int sys_debuglevel = 0;
+int sys_externalschedlib = 0;
+int sys_audioapiopened = 0; 
 
 int audio_shouldkeepopen(void) { return (0);}
 int audio_isopen( void) { return (1); }
@@ -114,6 +121,7 @@ void x_midi_newpdinstance( void) {}
 t_symbol *iemgui_raute2dollar(t_symbol *s) {return(s);}
 t_symbol *iemgui_dollar2raute(t_symbol *s) {return(s);}
 
+void sys_init_fdpoll() {};
 
 
 /* --------------- m_sched.c -------------------- */
@@ -290,6 +298,115 @@ void sched_tick(void)
     pd_this->pd_systime = next_sys_time;
     dsp_tick();
     sched_diddsp++;
+}
+
+void sched_set_using_audio(int flag)
+{
+    // sched_useaudio = flag;
+    // if (flag == SCHED_AUDIO_NONE)
+    // {
+    //     sched_referencerealtime = sys_getrealtime();
+    //     sched_referencelogicaltime = clock_getlogicaltime();
+    // }
+
+    // pdgui_vmess("pdtk_pd_audio", "r", flag ? "on" : "off");
+}
+
+static int audio_isfixedsr(int api)
+{
+#ifdef USEAPI_JACK
+    /* JACK server sets it's own samplerate */
+    return (api == API_JACK);
+#endif
+    return 0;
+}
+
+int sys_startgui(const char *libdir)
+{
+    // t_canvas *x;
+    // stderr_isatty = isatty(2);
+    // for (x = pd_getcanvaslist(); x; x = x->gl_next)
+    //     canvas_vis(x, 0);
+    // INTER->i_havegui = 0;
+    // INTER->i_havetkproc = 1;
+    // INTER->i_guihead = INTER->i_guitail = 0;
+    // INTER->i_waitingforping = 0;
+    // if (sys_do_startgui(libdir))
+    //     return (-1);
+    return (0);
+}
+
+    /* Shut the GUI down. */
+void sys_stopgui(void)
+{
+    // t_canvas *x;
+    // for (x = pd_getcanvaslist(); x; x = x->gl_next)
+    //     canvas_vis(x, 0);
+
+    // if (INTER->i_guisock >= 0)
+    // {
+    //     sys_closesocket(INTER->i_guisock);
+    //     sys_rmpollfn(INTER->i_guisock);
+    //     INTER->i_guisock = -1;
+    // }
+    // INTER->i_havegui = 0;
+    // INTER->i_havetkproc = 0;
+}
+
+
+    /* inform rest of Pd of current channels and sample rate.  Do this when
+    opening audio device.  This is also called from alsamm but I think that
+    is no longer in use, so in principle this could be static. */
+
+void sys_setchsr(int chin, int chout, int sr)
+{
+    int oldchin = STUFF->st_inchannels;
+    int oldchout = STUFF->st_outchannels;
+    int oldinbytes = (oldchin ? oldchin : 2) *
+        (DEFDACBLKSIZE*sizeof(t_sample));
+    int oldoutbytes = (oldchout ? oldchout : 2) *
+        (DEFDACBLKSIZE*sizeof(t_sample));
+    int inbytes = (chin ? chin : 2) *
+        (DEFDACBLKSIZE*sizeof(t_sample));
+    int outbytes = (chout ? chout : 2) *
+        (DEFDACBLKSIZE*sizeof(t_sample));
+    int changed = 0;
+
+        /* NB: reallocating the input/output channel arrays requires a DSP
+        graph update, so we only do it if the channel count has changed! */
+    if (!STUFF->st_soundin || chin != oldchin)
+    {
+        if (STUFF->st_soundin)
+            freebytes(STUFF->st_soundin, oldinbytes);
+        STUFF->st_soundin = (t_sample *)getbytes(inbytes);
+        STUFF->st_inchannels = chin;
+        changed = 1;
+    }
+    memset(STUFF->st_soundin, 0, inbytes);
+
+    if (!STUFF->st_soundout || chout != oldchout)
+    {
+        if (STUFF->st_soundout)
+            freebytes(STUFF->st_soundout, oldoutbytes);
+        STUFF->st_soundout = (t_sample *)getbytes(outbytes);
+        STUFF->st_outchannels = chout;
+        changed = 1;
+    }
+    memset(STUFF->st_soundout, 0, outbytes);
+
+    if (!audio_isfixedsr(sys_audioapiopened))
+    {
+        if (STUFF->st_dacsr != sr)
+            changed = 1;
+        STUFF->st_dacsr = sr;
+    }
+
+    logpost(NULL, PD_VERBOSE, "input channels = %d, output channels = %d",
+            STUFF->st_inchannels, STUFF->st_outchannels);
+
+        /* prevent redundant DSP updates, particularly when toggling DSP */
+    if (changed)
+        canvas_update_dsp();
 }
 
 
@@ -912,100 +1029,3 @@ void conf_init(void)
 sed command to prepare patch:
     sed 's/;$/;\\/' foo.pd | sed 's/#N //'
 */
-
-#if 0
-static const char patchfile[] = "\
-canvas 274 279 752 643 12;\n\
-#X obj 123 146 loadbang;\n\
-#X obj 123 171 metro 1000;\n\
-#X obj 123 196 print poodle;\n\
-#X connect 0 0 1 0;\n\
-#X connect 1 0 2 0;\n\
-";
-#endif
-#if 0
-#endif
-#ifdef PD_INCLUDEPATCH
-#include "testpatch.c"
-#endif
-
-static const char patchfile[] = "\
-canvas 0 50 450 300 12;\n\
-#X obj 190 104 loadbang;\n\
-#X msg 190 129; pd dsp 1;\n\
-#X obj 118 123 dac~ 1;\n\
-#X obj 118 98 osc~ 440;\n\
-#X connect 0 0 1 0;\n\
-#X connect 3 0 2 0;\n\
-";
-
-#define BLKSIZE 64
-float soundin[IOCHANS * BLKSIZE], soundout[IOCHANS * BLKSIZE];
-
-void pd_init(void);
-
-void pdmain_init( void)
-{
-    /* sys_printhook = pdmain_print; */
-    pd_init();
-    STUFF->st_dacsr = sys_getsr();
-    STUFF->st_soundout = soundout;
-    STUFF->st_soundin = soundin;
-
-// #ifdef PD_INCLUDEPATCH
-//     {
-
-printf("\n*** before creating initial patch.\n");
-        t_binbuf *b = binbuf_new();
-        glob_setfilename(0, gensym("main-patch"), gensym("."));
-        binbuf_text(b, patchfile, strlen(patchfile));
-        binbuf_eval(b, &pd_canvasmaker, 0, 0);
-
-
-printf("firing loadbang\n");
-        canvas_loadbang((t_canvas *)s__X.s_thing);
-        vmess(s__X.s_thing, gensym("pop"), "i", 0);
-        glob_setfilename(0, &s_, &s_);
-        binbuf_free(b);
-//     }
-// #endif
-    printf("after creating initial patch.\n\n");
-
-#ifdef PICO
-    printf("running benchmark.\n\n");
-    uint32_t T0 = time_us_32();
-
-    for(int k=0; k<44100/BLKSIZE; k++) {
-        memset(soundout, 0, 64*sizeof(float));
-        sched_tick();
-    }
-
-    uint32_t T1 = time_us_32();
-    printf("generating 1 second of audio took %d us \n", T1-T0);
-#endif
-}
-
-
-void pdmain_tick( void)
-{
-    printf("\n*** before tick..\n");
-    for(int k=0; k<BLKSIZE; k+=8) {
-        printf("  soundin[%d] = %f\n",k, soundin[k]);
-    }
-
-#ifdef PICO
-uint32_t T0 = time_us_32();
-#endif
-    memset(soundout, 0, 64*sizeof(float));
-    sched_tick();
-
-#ifdef PICO
-uint32_t T1 = time_us_32();
-    printf("after tick.. (%d us)\n", T1-T0);
-#else
-    printf("after tick..\n");
-#endif
-    for(int k=0; k<BLKSIZE; k+=8) {
-        printf("  soundout[%d] = %f\n", k, soundout[k]);
-    }
-}
